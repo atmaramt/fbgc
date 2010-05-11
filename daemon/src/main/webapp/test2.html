@@ -34,6 +34,7 @@
 			    {
 			        if(accepted) {
 			            // User (already) has permission
+			            var api = FB.Facebook.apiClient;
 			            alert('already granted' + api.get_session().session_key);
 			        }
 			        else
