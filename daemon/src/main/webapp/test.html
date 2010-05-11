@@ -9,9 +9,25 @@
 
 		<script type="text/javascript">
 			FB.init("11b0bfb6cbf4a5dfe69227d7b2972f2a", "xd_receiver.htm");
-		  	FB.ensureInit(function() {
-				FB.Connect.showPermissionDialog("xmpp_login");
-			});
+
+		  	FB.Connect.init("11b0bfb6cbf4a5dfe69227d7b2972f2a"); 
+		  	FB.ensureInit(
+				function() { 
+				  	FB.Connect.get_status().waitUntilReady(
+					  	function( status ) { 
+						  	switch ( status ) { 
+							  	case FB.ConnectState.connected: 
+								  	loggedIn = true; 
+							  		break; 
+							  	case FB.ConnectState.appNotAuthorized: 
+								case FB.ConnectState.userNotLoggedIn: 
+									FB.Connect.requireSession(); 
+									loggedIn = false; 
+							} 
+						}
+					); 
+				}
+			);
 		</script>
 	</body>
 </html>
