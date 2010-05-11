@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.albino.DojoCommunicationHandler;
-import org.albino.mechanisms.FacebookConnectSASLMechanism;
 import org.albino.mechanisms.FacebookSASLDigestMD5Mechanism;
 import org.apache.log4j.Logger;
 import org.jivesoftware.smack.Chat;
@@ -29,16 +28,15 @@ import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Type;
 
-public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
+public class DigestSessionHandlerImpl implements RosterListener, ChatManagerListener,
 		ConnectionListener, PacketListener, MessageListener {
-	Logger logger = Logger.getLogger(SessionHandlerImpl.class);
+	Logger logger = Logger.getLogger(DigestSessionHandlerImpl.class);
 
 	protected final String sessionIdentifier;
 	protected final DojoCommunicationHandler handler;
 
-	String sessionKey;
-	String apiKey = "11b0bfb6cbf4a5dfe69227d7b2972f2a";
-	String apiSecret = "f33825fb56bd37cb7b4861ea90085eef";
+	String username;
+	String password;
 
 	String host = "69.63.181.104";
 	int port = 5222;
@@ -55,7 +53,7 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 
 	Map<String, Chat> chats = new HashMap<String, Chat>();
 
-	public SessionHandlerImpl(String identifier,
+	public DigestSessionHandlerImpl(String identifier,
 			DojoCommunicationHandler handler) {
 		sessionIdentifier = identifier;
 		this.handler = handler;
@@ -75,14 +73,15 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 		}
 	}
 
-	public void startSession(String sessionKey) {
-		this.sessionKey = sessionKey;
+	public void startSession(String username, String password) {
+		this.username = username;
+		this.password = password;
 
-		SASLAuthentication.registerSASLMechanism("X-FACEBOOK-PLATFORM",
-				FacebookConnectSASLMechanism.class);
-		SASLAuthentication.supportSASLMechanism("X-FACEBOOK-PLATFORM", 0);
+		SASLAuthentication.registerSASLMechanism("DIGEST-MD5",
+				FacebookSASLDigestMD5Mechanism.class);
+		SASLAuthentication.supportSASLMechanism("DIGEST-MD5", 0);
 
-		logger.debug("startSession: Starting session... key: " + sessionKey);
+		logger.debug("startSession: Starting session...");
 
 		ConnectionConfiguration config = null;
 
@@ -102,7 +101,7 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 		}
 
 		try {
-			xmppConnection.login(apiKey + "|" + sessionKey, apiSecret, resource);
+			xmppConnection.login(username, password, resource);
 		} catch (XMPPException e) {
 			logger.error("Exception occured while logging in: ", e);
 		}
