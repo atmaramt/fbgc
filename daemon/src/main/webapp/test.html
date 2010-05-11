@@ -1,18 +1,19 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
 	<head>
+	<script type="text/javascript">
+		function facebook_onlogin(){
+			alert('asd');
+		}
+	</script>
 	</head>
 	<body>
 		<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript">
-		function facebook_onlogin(){
-			alert('asd : ' + FB.Facebook.apiClient.get_session());
-		}
 		
 		</script>
 
 		<fb:login-button onlogin="facebook_onlogin();></fb:login-button>
 
 		<fb:user-status uid="100000737588973" linked="true"></fb:user-status>
-
 		<script type="text/javascript">
 			FB.init("11b0bfb6cbf4a5dfe69227d7b2972f2a", "xd_receiver.htm");
 		</script>
