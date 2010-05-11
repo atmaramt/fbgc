@@ -1,15 +1,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
 	<head>
+		<script type="text/javascript">
+			function _cagri(){
+				alert('yo');
+			}
+		</script>
+	
 	</head>
 	<body>
 		<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript">
-		function facebook_onlogin(){
-			alert('yo');
-		}
 		
 		</script>
 
-		<fb:login-button onlogin="facebook_onlogin();></fb:login-button>
+		<fb:login-button onlogin="_cagri();></fb:login-button>
 
 		<fb:user-status uid="100000737588973" linked="true"></fb:user-status>
 
