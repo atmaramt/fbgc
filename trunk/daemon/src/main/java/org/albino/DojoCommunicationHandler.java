@@ -46,7 +46,7 @@ public class DojoCommunicationHandler extends BayeuxService {
 		SessionHandlerImpl sessionHandler = getSession(id);
 
 		if (action.equals(Action.LOGIN)) {
-			sessionHandler.startSession("kilitiki", "hedehode");
+			sessionHandler.startSession("session_key");
 		} else if (action.equals(Action.LOGOUT)) {
 			sessionHandler.stopSession();
 		} else if (action.equals(Action.SEND)) {
