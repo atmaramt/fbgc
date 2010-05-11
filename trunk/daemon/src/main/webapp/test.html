@@ -3,32 +3,18 @@
 	</head>
 	<body>
 		<script src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript">
+		function facebook_onlogin(){
+			alert('asd : ' + FB.Facebook.apiClient.get_session());
+		}
+		
 		</script>
 
-		<fb:login-button></fb:login-button>
+		<fb:login-button onlogin="facebook_onlogin();></fb:login-button>
 
 		<fb:user-status uid="100000737588973" linked="true"></fb:user-status>
 
 		<script type="text/javascript">
 			FB.init("11b0bfb6cbf4a5dfe69227d7b2972f2a", "xd_receiver.htm");
-
-			FB.Connect.init("11b0bfb6cbf4a5dfe69227d7b2972f2a"); 
-			FB.ensureInit(
-						function() { 
-							FB.Connect.get_status().waitUntilReady( 
-									function( status ) { 
-										switch ( status ) { 
-										case FB.ConnectState.connected: 
-											loggedIn = true; 
-											break; 
-										case FB.ConnectState.appNotAuthorized: 
-										case FB.ConnectState.userNotLoggedIn: 
-											FB.Connect.requireSession(); 
-											loggedIn = false; 
-										} 
-									}
-							); 
-						});
 		</script>
 	</body>
 </html>
