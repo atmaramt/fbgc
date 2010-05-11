@@ -18,12 +18,12 @@
 	    	            cometd.publish('/service/incoming', { action: 'send', message: dojo.byId('phrase').value, id: '1' });
 	    	        });
 	        }
-	        function _login()
+	        function _login(session_key)
 	        {
 	        	var cometd = dojox.cometd;
 	        	cometd.batch(function()
 	    	        {
-	    	            cometd.publish('/service/incoming', { action: 'login'});
+	    	            cometd.publish('/service/incoming', { action: 'login', key : session_key});
 	    	        });
 	        }
 	        function _logout()
@@ -44,7 +44,7 @@
 									"<h2>Your bot is</h2>" +
 									"<fb:profile-pic uid=loggedinuser facebook-logo=true></fb:profile-pic>" + 
 									"<fb:name uid=loggedinuser useyou=false></fb:name>" + 
-									"<a href='#' onclick='_login();'>Login</a>" +
+									"<a href='#' onclick='_loginEx();'>Login</a>" +
 									"</span>"; 
 
 				var userid_box = document.getElementById("userid");
@@ -55,14 +55,14 @@
 				FB.XFBML.Host.parseDomTree(); 
 			}
 
-			function _login()
+			function _loginEx()
 			{
 			    facebook_prompt_permission('xmpp_login', function(accepted)
 			    {
 			        if(accepted) {
 			            // User (already) has permission
 			            var api = FB.Facebook.apiClient;
-			            alert('already granted' + api.get_session().session_key);
+			            _login(api.get_session().session_key);
 			        }
 			        else
 			        {
@@ -113,11 +113,6 @@
 		<div id="body"></div>
 		
 		<h1>facebookGroupChat.com</h1>
-		
-		<div>
-			<a href="#" onClick="_login();">Login!</a>
-			<a href="#" onClick="_logout();">Logout!</a>
-		</div>
 		
 		<div id="messages"></div>
 	
