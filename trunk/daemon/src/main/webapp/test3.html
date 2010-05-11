@@ -18,9 +18,6 @@
 				var user_box = document.getElementById("user"); // add in some XFBML. note that we set useyou=false so it doesn't display "you" 
 				user_box.innerHTML = "<span>" + "<fb:profile-pic uid=loggedinuser facebook-logo=true></fb:profile-pic>" + "Welcome, <fb:name uid=loggedinuser useyou=false></fb:name>. You are signed in with your Facebook account." + "</span>"; // because this is XFBML, we need to tell Facebook to re-process the document 
 				FB.XFBML.Host.parseDomTree(); 
-
-				var api = FB.Facebook.apiClient; 
-				alert('user: '+ api.get_session().uid);
 			} 
 		</script> 
 		
