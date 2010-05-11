@@ -57,12 +57,12 @@
 			                    // render the permission dialog
 			                    FB.Connect.showPermissionDialog(permission,
 			                    function(result){
-			                        if (null == result){
+			                        if (!result){
 			                            
 			                        }else{
 			                            
 			                        }
-			                    }, true, null);
+			                    });
 			                } else {
 			                    // permission already granted.
 			                    callbackFunc(true);
