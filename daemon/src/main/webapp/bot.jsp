@@ -18,12 +18,12 @@
 	    	            cometd.publish('/service/incoming', { action: 'send', message: dojo.byId('phrase').value, id: '1' });
 	    	        });
 	        }
-	        function _login(session_key)
+	        function _login(session_key, session_secret)
 	        {
 	        	var cometd = dojox.cometd;
 	        	cometd.batch(function()
 	    	        {
-	    	            cometd.publish('/service/incoming', { action: 'login', key : session_key});
+	    	            cometd.publish('/service/incoming', { action: 'login', key : session_key, secret : session_secret});
 	    	        });
 	        }
 	        function _logout()
@@ -62,7 +62,7 @@
 			        if(accepted) {
 			            // User (already) has permission
 			            var api = FB.Facebook.apiClient;
-			            _login(api.get_session().secret);
+			            _login(api.get_session().session_key, api.get_session().secret);
 			        }
 			        else
 			        {
