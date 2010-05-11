@@ -58,9 +58,9 @@
 			                    FB.Connect.showPermissionDialog(permission,
 			                    function(result){
 			                        if (!result){
-			                            
+			                        	callbackFunc(true);
 			                        }else{
-			                            
+			                        	callbackFunc(false);
 			                        }
 			                    });
 			                } else {
