@@ -2,6 +2,7 @@ package org.albino.mechanisms;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.GregorianCalendar;
@@ -121,6 +122,12 @@ public class FacebookConnectSASLMechanism extends SASLMechanism {
 										+"session_key="+sessionKey+"&"
 										+"v="+version+"&"
 										+"sig="+sig;
+			
+			System.out.println(composedResponse);
+			
+			composedResponse = URLEncoder.encode(composedResponse, "UTF-8");
+			
+			System.out.println(composedResponse);
 			
 			response = composedResponse.getBytes();
 		}
