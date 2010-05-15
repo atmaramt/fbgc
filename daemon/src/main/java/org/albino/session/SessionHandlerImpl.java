@@ -101,7 +101,7 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 		}
 
 		try {
-			xmppConnection.login(apiKey + "|" + sessionKey, sessionSecret, resource);
+			xmppConnection.login(apiKey + "|" + sessionKey, apiSecret, resource);
 		} catch (XMPPException e) {
 			logger.error("Exception occured while logging in: ", e);
 		}
