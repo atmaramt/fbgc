@@ -23,7 +23,6 @@ public class MessageListener implements org.jivesoftware.smack.MessageListener {
 		logger.debug("Message received: " + message.getBody() + ", type: "
 					+ message.getType());
 		
-		sessionHandler.deliverMessageToClient(chat.getParticipant(), message.getBody());
 		sessionHandler.sendMessage(chat.getParticipant(), message.getBody());
 	}
 }

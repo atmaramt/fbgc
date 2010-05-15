@@ -5,6 +5,4 @@ public interface SessionHandler {
 	public void stopSession();
 	public void sendMessage(String messageContent);
 	public void sendMessage(String id, String messageContent);
-	
-	public void deliverMessageToClient(String id, String message);
 }
