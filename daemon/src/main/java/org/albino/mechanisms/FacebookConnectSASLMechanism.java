@@ -123,12 +123,6 @@ public class FacebookConnectSASLMechanism extends SASLMechanism {
 										+"v="+version+"&"
 										+"sig="+sig;
 			
-			System.out.println(composedResponse);
-			
-			composedResponse = URLEncoder.encode(composedResponse, "UTF-8");
-			
-			System.out.println(composedResponse);
-			
 			response = composedResponse.getBytes();
 		}
 
