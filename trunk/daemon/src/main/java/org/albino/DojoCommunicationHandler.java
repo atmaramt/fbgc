@@ -5,7 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.albino.session.SessionHandlerImpl;
+import org.albino.xmpp.SessionHandler;
+import org.albino.xmpp.SessionHandlerImpl;
 import org.apache.log4j.Logger;
 import org.cometd.Bayeux;
 import org.cometd.Client;
@@ -22,7 +23,7 @@ public class DojoCommunicationHandler extends BayeuxService {
 	Set<String> knownIds = new HashSet<String>();
 	Bayeux bayeux;
 
-	Map<String, SessionHandlerImpl> sessions = new HashMap<String, SessionHandlerImpl>();
+	Map<String, SessionHandler> sessions = new HashMap<String, SessionHandler>();
 
 	public DojoCommunicationHandler(final Bayeux bayeux) {
 		super(bayeux, "dojo");
@@ -43,7 +44,7 @@ public class DojoCommunicationHandler extends BayeuxService {
 				sessions.put(id, new SessionHandlerImpl(id, this));
 		}
 
-		SessionHandlerImpl sessionHandler = getSession(id);
+		SessionHandler sessionHandler = getSession(id);
 
 		if (action.equals(Action.LOGIN)) {
 			Map<String, Object> data = (Map<String, Object>) message.getData();
@@ -72,8 +73,8 @@ public class DojoCommunicationHandler extends BayeuxService {
 		remoteClient.deliver(getClient(), "/service/outgoing", data, null);
 	}
 
-	private SessionHandlerImpl getSession(String id) {
-		SessionHandlerImpl sessionHandler = sessions.get(id);
+	private SessionHandler getSession(String id) {
+		SessionHandler sessionHandler = sessions.get(id);
 
 		if (sessionHandler == null)
 			throw new IllegalStateException("Session not found with id = " + id);
