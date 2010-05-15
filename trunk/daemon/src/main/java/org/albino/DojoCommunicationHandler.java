@@ -48,7 +48,8 @@ public class DojoCommunicationHandler extends BayeuxService {
 		if (action.equals(Action.LOGIN)) {
 			Map<String, Object> data = (Map<String, Object>) message.getData();
 			String sessionKey = (String) data.get("key");
-			sessionHandler.startSession(sessionKey);
+			String sessionSecret = (String) data.get("secret");
+			sessionHandler.startSession(sessionKey, sessionSecret);
 		} else if (action.equals(Action.LOGOUT)) {
 			sessionHandler.stopSession();
 		} else if (action.equals(Action.SEND)) {

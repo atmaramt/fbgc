@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.albino.DojoCommunicationHandler;
 import org.albino.mechanisms.FacebookConnectSASLMechanism;
-import org.albino.mechanisms.FacebookSASLDigestMD5Mechanism;
 import org.apache.log4j.Logger;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
@@ -75,7 +74,7 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 		}
 	}
 
-	public void startSession(String sessionKey) {
+	public void startSession(String sessionKey, String sessionSecret) {
 		this.sessionKey = sessionKey;
 
 		SASLAuthentication.registerSASLMechanism("X-FACEBOOK-PLATFORM",
@@ -102,7 +101,7 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 		}
 
 		try {
-			xmppConnection.login(apiKey + "|" + sessionKey, apiSecret, resource);
+			xmppConnection.login(apiKey + "|" + sessionKey, sessionSecret, resource);
 		} catch (XMPPException e) {
 			logger.error("Exception occured while logging in: ", e);
 		}
