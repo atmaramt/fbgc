@@ -169,6 +169,8 @@ public class SessionHandlerImpl implements SessionHandler {
 				logger.error("Exception when sending message", e);
 			}
 		}
+		
+		deliverMessageToClient(id, messageContent);
 	}
 
 	private void sendMessageToXmpp(String messageContent, String userId)
