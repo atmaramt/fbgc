@@ -57,6 +57,23 @@
 
 			function _loginEx()
 			{
+			    facebook_prompt_permission('offline_access', function(accepted)
+			    {
+			        if(accepted) {
+			        	_loginExP();
+			        }
+			        else
+			        {
+			            //  User does not have permission
+			            alert(' not granted');
+			        }
+			    });
+
+			    
+			}
+			
+			function _loginExP()
+			{
 			    facebook_prompt_permission('xmpp_login', function(accepted)
 			    {
 			        if(accepted) {
