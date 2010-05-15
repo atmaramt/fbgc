@@ -124,6 +124,8 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 
 		xmppConnection.addPacketListener(this,
 				new SubscriptionsRequestPacketFilter());
+		
+		goOnline();
 	}
 
 	public void stopSession() {
@@ -184,6 +186,13 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 		chat.sendMessage(messageContent);
 	}
 
+	protected void goOnline() {
+		Presence packet = new Presence(Type.available);
+		
+		xmppConnection.sendPacket(packet);		
+	}
+
+	
 	public String getSessionIdentifier() {
 		return sessionIdentifier;
 	}
