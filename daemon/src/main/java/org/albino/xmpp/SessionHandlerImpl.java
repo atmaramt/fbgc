@@ -1,36 +1,40 @@
 package org.albino.xmpp;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.albino.DojoCommunicationHandler;
 import org.albino.mechanisms.FacebookConnectSASLMechanism;
+import org.albino.xmpp.listener.ChatManagerListener;
+import org.albino.xmpp.listener.ConnectionListener;
+import org.albino.xmpp.listener.MessageListener;
+import org.albino.xmpp.listener.PacketListener;
+import org.albino.xmpp.listener.RosterListener;
 import org.apache.log4j.Logger;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
-import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.ConnectionListener;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
 import org.jivesoftware.smack.filter.PacketFilter;
-import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Type;
 
-public class SessionHandlerImpl implements SessionHandler, RosterListener, ChatManagerListener,
-		ConnectionListener, PacketListener, MessageListener {
+public class SessionHandlerImpl implements SessionHandler {
 	Logger logger = Logger.getLogger(SessionHandlerImpl.class);
+	
+	RosterListener rosterListener = new RosterListener();
+	ConnectionListener connectionListener = new ConnectionListener();
+	PacketListener packetListener = new PacketListener();
+	MessageListener messageListener = new MessageListener(this);
+	ChatManagerImpl chatManager = new ChatManagerImpl(messageListener);
+	ChatManagerListener chatManagerListener = new ChatManagerListener(this, messageListener, chatManager);
 
 	protected final String sessionIdentifier;
 	protected final DojoCommunicationHandler handler;
@@ -50,9 +54,6 @@ public class SessionHandlerImpl implements SessionHandler, RosterListener, ChatM
 
 	XMPPConnection xmppConnection;
 	Roster roster;
-	ChatManager chatManager;
-
-	Map<String, Chat> chats = new HashMap<String, Chat>();
 
 	public SessionHandlerImpl(String identifier,
 			DojoCommunicationHandler handler) {
@@ -60,19 +61,6 @@ public class SessionHandlerImpl implements SessionHandler, RosterListener, ChatM
 		this.handler = handler;
 	}
 
-	protected Chat getChat(String userId) {
-		if (!chats.containsKey(userId)) {
-			addChat(userId, chatManager.createChat(userId, this));
-		}
-
-		return chats.get(userId);
-	}
-
-	protected void addChat(String userId, Chat chat) {
-		if (!chats.containsKey(userId)) {
-			chats.put(userId, chat);
-		}
-	}
 
 	public void startSession(String sessionKey) {
 		this.sessionKey = sessionKey;
@@ -109,20 +97,22 @@ public class SessionHandlerImpl implements SessionHandler, RosterListener, ChatM
 
 		roster = xmppConnection.getRoster();
 		roster.setSubscriptionMode(SubscriptionMode.manual);
-		roster.addRosterListener(this);
+		roster.addRosterListener(rosterListener);
 
 		logger.debug("Roster arrived: " + roster);
 
-		chatManager = xmppConnection.getChatManager();
-		chatManager.addChatListener(this);
-
-		xmppConnection.addConnectionListener(this);
+		
+		ChatManager chatManager = xmppConnection.getChatManager();
+		chatManager.addChatListener(chatManagerListener);
+		this.chatManager.setChatManager(chatManager);
+		
+		xmppConnection.addConnectionListener(connectionListener);
 
 		// xmppConnection.addPacketListener(this);
 		// this.xmppCon.addPacketWriterListener(new WritePacketListener(),
 		// anyFilter);
 
-		xmppConnection.addPacketListener(this,
+		xmppConnection.addPacketListener(packetListener,
 				new SubscriptionsRequestPacketFilter());
 		
 		goOnline();
@@ -132,27 +122,27 @@ public class SessionHandlerImpl implements SessionHandler, RosterListener, ChatM
 		if (xmppConnection == null)
 			return;
 
-		xmppConnection.removeConnectionListener(this);
+		xmppConnection.removeConnectionListener(connectionListener);
 
 		if (roster != null) {
-			roster.removeRosterListener(this);
+			roster.removeRosterListener(rosterListener);
 			roster = null;
 		}
 
 		if (chatManager != null) {
-			chatManager.removeChatListener(this);
+			chatManager.getChatManager().removeChatListener(chatManagerListener);
 			chatManager = null;
 		}
 
 		if (xmppConnection != null && xmppConnection.isConnected()) {
-			xmppConnection.removePacketListener(this);
+			xmppConnection.removePacketListener(packetListener);
 
 			xmppConnection.disconnect();
 			xmppConnection = null;
 		}
 	}
 
-	public void handleIncomingMessage(String id, String message) {
+	public void deliverMessageToClient(String id, String message) {
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("action", "received");
 		data.put("id", id);
@@ -164,25 +154,28 @@ public class SessionHandlerImpl implements SessionHandler, RosterListener, ChatM
 			logger.error("Exception processing message", e);
 		}
 
+	}
+
+	public void sendMessage(String messageContent) {
+		String id = "Bot";
+		
 		for (RosterEntry rosterEntry : roster.getEntries()) {
 			try {
-				sendMessageToXmpp(id + " says " + message, rosterEntry
+				sendMessageToXmpp(id + " says " + messageContent, rosterEntry
 						.getUser());
 			} catch (XMPPException e) {
 				logger.error("Exception when sending message", e);
 			}
 		}
-	}
-
-	public void sendMessage(String messageContent) {
-		handleIncomingMessage("Bot", messageContent);
+		
+		deliverMessageToClient(id, messageContent);
 	}
 
 	private void sendMessageToXmpp(String messageContent, String userId)
 			throws XMPPException {
 		logger.debug("Sending message " + messageContent + " to " + userId);
 
-		Chat chat = getChat(userId);
+		Chat chat = chatManager.getChat(userId);
 		chat.sendMessage(messageContent);
 	}
 
@@ -197,79 +190,6 @@ public class SessionHandlerImpl implements SessionHandler, RosterListener, ChatM
 		return sessionIdentifier;
 	}
 
-	// Methods to implement for RosterListener interface
-	public void entriesAdded(Collection<String> arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void entriesDeleted(Collection<String> arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void entriesUpdated(Collection<String> arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void presenceChanged(Presence arg0) {
-		// TODO Auto-generated method stub
-
-	}//
-
-	// Methods to implement for ChatManagerListener interface
-	public void chatCreated(Chat chat, boolean arg1) {
-		addChat(chat.getParticipant(), chat);
-
-		chat.addMessageListener(this);
-
-	}//
-
-	// Methods to implement for ConnectionListener interface
-	public void connectionClosed() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void connectionClosedOnError(Exception arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void reconnectingIn(int arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void reconnectionFailed(Exception arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void reconnectionSuccessful() {
-		// TODO Auto-generated method stub
-
-	}//
-
-	// Methods to implement for PacketListener interface
-	public void processPacket(Packet arg0) {
-		// TODO Auto-generated method stub
-
-	}//
-
-	// Methods to implement for MessageListener interface
-	public void processMessage(Chat chat, Message message) {
-		if(message.getBody()==null){
-			logger.debug(message.getFrom() + " is typing...");
-			return;
-		}
-			
-		logger.debug("Message received: " + message.getBody() + ", type: "
-					+ message.getType());
-		handleIncomingMessage(chat.getParticipant(), message.getBody());
-	}
-
 	private static class SubscriptionsRequestPacketFilter implements
 			PacketFilter {
 		public boolean accept(Packet packet) {
@@ -282,5 +202,9 @@ public class SessionHandlerImpl implements SessionHandler, RosterListener, ChatM
 			}
 			return accept;
 		}
+	}
+	
+	public ChatManagerImpl getChatManager() {
+		return chatManager;
 	}
 }
