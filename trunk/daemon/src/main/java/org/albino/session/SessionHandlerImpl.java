@@ -74,7 +74,7 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 		}
 	}
 
-	public void startSession(String sessionKey, String sessionSecret) {
+	public void startSession(String sessionKey) {
 		this.sessionKey = sessionKey;
 
 		SASLAuthentication.registerSASLMechanism("X-FACEBOOK-PLATFORM",
@@ -101,7 +101,8 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 		}
 
 		try {
-			xmppConnection.login(apiKey + "|" + sessionKey, apiSecret, resource);
+			xmppConnection
+					.login(apiKey + "|" + sessionKey, apiSecret, resource);
 		} catch (XMPPException e) {
 			logger.error("Exception occured while logging in: ", e);
 		}
@@ -155,11 +156,16 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 		data.put("id", id);
 		data.put("message", message);
 
-		handler.processOutgoing(sessionIdentifier, data);
+		try {
+			handler.processOutgoing(sessionIdentifier, data);
+		} catch (Exception e) {
+			logger.error("Exception processing message", e);
+		}
 
 		for (RosterEntry rosterEntry : roster.getEntries()) {
 			try {
-				sendMessageToXmpp(id + " says " + message, rosterEntry.getUser());
+				sendMessageToXmpp(id + " says " + message, rosterEntry
+						.getUser());
 			} catch (XMPPException e) {
 				logger.error("Exception when sending message", e);
 			}
@@ -245,6 +251,9 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 
 	// Methods to implement for MessageListener interface
 	public void processMessage(Chat chat, Message message) {
+		logger.debug("Message received: " + message.getBody() + ", type: "
+				+ message.getType());
+
 		handleIncomingMessage(chat.getParticipant(), message.getBody());
 	}
 
