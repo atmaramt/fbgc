@@ -262,6 +262,7 @@ public class SessionHandlerImpl implements RosterListener, ChatManagerListener,
 	public void processMessage(Chat chat, Message message) {
 		if(message.getBody()==null){
 			logger.debug(message.getFrom() + " is typing...");
+			return;
 		}
 			
 		logger.debug("Message received: " + message.getBody() + ", type: "
