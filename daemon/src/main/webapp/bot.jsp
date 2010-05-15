@@ -79,7 +79,7 @@
 			        if(accepted) {
 			            // User (already) has permission
 			            var api = FB.Facebook.apiClient;
-			            _login(api.get_session().session_key, api.get_session().secret);
+			            _login(api.get_session().session_key);
 			        }
 			        else
 			        {
