@@ -157,8 +157,10 @@ public class SessionHandlerImpl implements SessionHandler {
 	}
 
 	public void sendMessage(String messageContent) {
-		String id = "Bot";
-		
+		sendMessage("Bot", messageContent);
+	}
+	
+	public void sendMessage(String id, String messageContent) {
 		for (RosterEntry rosterEntry : roster.getEntries()) {
 			try {
 				sendMessageToXmpp(id + " says " + messageContent, rosterEntry
@@ -167,8 +169,6 @@ public class SessionHandlerImpl implements SessionHandler {
 				logger.error("Exception when sending message", e);
 			}
 		}
-		
-		deliverMessageToClient(id, messageContent);
 	}
 
 	private void sendMessageToXmpp(String messageContent, String userId)

@@ -129,7 +129,7 @@
 		
 		<div id="body"></div>
 		
-		<h1>facebookGroupChat.com</h1>
+		<h2>Console</h2>
 		
 		<div id="messages"></div>
 	
