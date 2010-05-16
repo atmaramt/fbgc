@@ -16,7 +16,7 @@ public class RosterManager {
 		this.roster = roster;
 		for (RosterEntry rosterEntry : roster.getEntries()) {
 			System.out.println("Added element: " + rosterEntry.getUser() + ", "
-					+ rosterEntry.getName());
+					+ rosterEntry.getName() + ", " + rosterEntry.getStatus());
 			addElement(rosterEntry.getUser(), rosterEntry.getName());
 		}
 	}
@@ -34,6 +34,7 @@ public class RosterManager {
 			RosterElement rosterElement = new RosterElement();
 			rosterElement.setId(id);
 			rosterElement.setDisplayName(displayName);
+			knownEntries.put(id, rosterElement);
 		}
 	}
 
