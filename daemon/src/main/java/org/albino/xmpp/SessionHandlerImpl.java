@@ -15,7 +15,6 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -34,6 +33,7 @@ public class SessionHandlerImpl implements SessionHandler {
 	PacketListener packetListener = new PacketListener();
 	MessageListener messageListener = new MessageListener(this);
 	ChatManagerImpl chatManager = new ChatManagerImpl(messageListener);
+	RosterManager rosterManager = new RosterManager();
 	ChatManagerListener chatManagerListener = new ChatManagerListener(this, messageListener, chatManager);
 
 	protected final String sessionIdentifier;
@@ -53,7 +53,6 @@ public class SessionHandlerImpl implements SessionHandler {
 	boolean isReconnectionAllowed = false;
 
 	XMPPConnection xmppConnection;
-	Roster roster;
 
 	public SessionHandlerImpl(String identifier,
 			DojoCommunicationHandler handler) {
@@ -94,11 +93,12 @@ public class SessionHandlerImpl implements SessionHandler {
 		} catch (XMPPException e) {
 			logger.error("Exception occured while logging in: ", e);
 		}
-
-		roster = xmppConnection.getRoster();
+		
+		Roster roster = xmppConnection.getRoster();
 		roster.setSubscriptionMode(SubscriptionMode.manual);
 		roster.addRosterListener(rosterListener);
 
+		rosterManager.setRoster(roster);
 		logger.debug("Roster arrived: " + roster);
 
 		
@@ -124,9 +124,9 @@ public class SessionHandlerImpl implements SessionHandler {
 
 		xmppConnection.removeConnectionListener(connectionListener);
 
-		if (roster != null) {
-			roster.removeRosterListener(rosterListener);
-			roster = null;
+		if (rosterManager.getRoster() != null) {
+			rosterManager.getRoster().removeRosterListener(rosterListener);
+			rosterManager = null;
 		}
 
 		if (chatManager != null) {
@@ -161,16 +161,22 @@ public class SessionHandlerImpl implements SessionHandler {
 	}
 	
 	public void sendMessage(String id, String messageContent) {
-		for (RosterEntry rosterEntry : roster.getEntries()) {
+		RosterElement sender = rosterManager.getElement(id);
+		String senderName = id;
+		
+		if(sender!=null)
+			senderName = sender.getDisplayName();
+		
+		for (RosterElement rosterElement : rosterManager.getRosterElements()) {
 			try {
-				sendMessageToXmpp(id + " says " + messageContent, rosterEntry
-						.getUser());
+				sendMessageToXmpp(senderName + " says " + messageContent, rosterElement
+						.getId());
 			} catch (XMPPException e) {
 				logger.error("Exception when sending message", e);
 			}
 		}
 		
-		deliverMessageToClient(id, messageContent);
+		deliverMessageToClient(senderName, messageContent);
 	}
 
 	private void sendMessageToXmpp(String messageContent, String userId)
