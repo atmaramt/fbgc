@@ -15,6 +15,8 @@ public class RosterManager {
 	public void setRoster(Roster roster) {
 		this.roster = roster;
 		for (RosterEntry rosterEntry : roster.getEntries()) {
+			System.out.println("Added element: " + rosterEntry.getUser() + ", "
+					+ rosterEntry.getName());
 			addElement(rosterEntry.getUser(), rosterEntry.getName());
 		}
 	}
@@ -22,8 +24,8 @@ public class RosterManager {
 	public Roster getRoster() {
 		return roster;
 	}
-	
-	public List<RosterElement> getRosterElements(){
+
+	public List<RosterElement> getRosterElements() {
 		return new ArrayList<RosterElement>(knownEntries.values());
 	}
 
@@ -35,10 +37,10 @@ public class RosterManager {
 		}
 	}
 
-	public RosterElement getElement(String id){
+	public RosterElement getElement(String id) {
 		return knownEntries.get(id);
 	}
-	
+
 	public void removeElement(String id) {
 		knownEntries.remove(id);
 	}
