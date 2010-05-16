@@ -5,7 +5,7 @@ package org.albino.xmpp;
  * 
  */
 
-public class RosterEntry {
+public class RosterElement {
 	private String id;
 	private String displayName;
 	private String avatarUrl;
