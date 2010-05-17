@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/dojo/dojo.js.uncompressed.js"></script>
-	    <script type="text/javascript" src="dojoCommunicationHandler.js"></script>
+	    <script type="text/javascript" src="handler.js"></script>
 	    <script type="text/javascript">
 	    	dojo.require("dojox.cometd");
 	    
