@@ -10,30 +10,6 @@
 	        var config = {
 	            contextPath: '${pageContext.request.contextPath}'
 	        };
-	        function _sendMessage()
-	        {
-	        	var cometd = dojox.cometd;
-	        	cometd.batch(function()
-	    	        {
-	    	            cometd.publish('/service/incoming', { action: 'send', message: dojo.byId('phrase').value, id: '1' });
-	    	        });
-	        }
-	        function _login(session_key, session_secret)
-	        {
-	        	var cometd = dojox.cometd;
-	        	cometd.batch(function()
-	    	        {
-	    	            cometd.publish('/service/incoming', { action: 'login', key : session_key, secret : session_secret});
-	    	        });
-	        }
-	        function _logout()
-	        {
-	        	var cometd = dojox.cometd;
-	        	cometd.batch(function()
-	    	        {
-	    	            cometd.publish('/service/incoming', { action: 'logout'});
-	    	        });
-	        }
 	    </script>
 	    <script type="text/javascript"> 
 			function update_user_box() { 
@@ -116,7 +92,6 @@
 			        });
 			    });
 			}
-			
 		</script>
 	</head>
 	<body>
