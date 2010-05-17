@@ -165,9 +165,15 @@ public class SessionHandlerImpl implements SessionHandler {
 	}
 	
 	public void deliverPresenceToClient(String id, FacebookPresence presence) {
+		RosterElement sender = rosterManager.getElement(id);
+		String senderName = id;
+
+		if (sender != null)
+			senderName = sender.getDisplayName();
+		
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("action", "presence");
-		data.put("id", id);
+		data.put("id", senderName);
 		data.put("presence", PresenceUtil
 				.getPresenceStringFromFacebookPresence(presence));
 
