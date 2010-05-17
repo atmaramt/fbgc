@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.albino.DojoCommunicationHandler;
 import org.albino.mechanisms.FacebookConnectSASLMechanism;
+import org.albino.util.PresenceUtil;
 import org.albino.xmpp.listener.ChatManagerListener;
 import org.albino.xmpp.listener.ConnectionListener;
 import org.albino.xmpp.listener.MessageListener;
@@ -27,14 +28,15 @@ import org.jivesoftware.smack.packet.Presence.Type;
 
 public class SessionHandlerImpl implements SessionHandler {
 	Logger logger = Logger.getLogger(SessionHandlerImpl.class);
-	
-	RosterListener rosterListener = new RosterListener();
+
+	RosterManager rosterManager = new RosterManager();
+	RosterListener rosterListener = new RosterListener(this, rosterManager);
 	ConnectionListener connectionListener = new ConnectionListener();
 	PacketListener packetListener = new PacketListener();
 	MessageListener messageListener = new MessageListener(this);
 	ChatManagerImpl chatManager = new ChatManagerImpl(messageListener);
-	RosterManager rosterManager = new RosterManager();
-	ChatManagerListener chatManagerListener = new ChatManagerListener(this, messageListener, chatManager);
+	ChatManagerListener chatManagerListener = new ChatManagerListener(this,
+			messageListener, chatManager);
 
 	protected final String sessionIdentifier;
 	protected final DojoCommunicationHandler handler;
@@ -59,7 +61,6 @@ public class SessionHandlerImpl implements SessionHandler {
 		sessionIdentifier = identifier;
 		this.handler = handler;
 	}
-
 
 	public void startSession(String sessionKey) {
 		this.sessionKey = sessionKey;
@@ -93,7 +94,7 @@ public class SessionHandlerImpl implements SessionHandler {
 		} catch (XMPPException e) {
 			logger.error("Exception occured while logging in: ", e);
 		}
-		
+
 		Roster roster = xmppConnection.getRoster();
 		roster.setSubscriptionMode(SubscriptionMode.manual);
 		roster.addRosterListener(rosterListener);
@@ -101,11 +102,10 @@ public class SessionHandlerImpl implements SessionHandler {
 		rosterManager.setRoster(roster);
 		logger.debug("Roster arrived: " + roster);
 
-		
 		ChatManager chatManager = xmppConnection.getChatManager();
 		chatManager.addChatListener(chatManagerListener);
 		this.chatManager.setChatManager(chatManager);
-		
+
 		xmppConnection.addConnectionListener(connectionListener);
 
 		// xmppConnection.addPacketListener(this);
@@ -114,8 +114,15 @@ public class SessionHandlerImpl implements SessionHandler {
 
 		xmppConnection.addPacketListener(packetListener,
 				new SubscriptionsRequestPacketFilter());
-		
+
 		goOnline();
+		
+		for(RosterElement rosterElement : rosterManager.getRosterElements()){
+			FacebookPresence facebookPresence = PresenceUtil.getFacebookPresenceFromSmackPresence(rosterManager.getPresence(rosterElement.getId()));
+			if(facebookPresence!=null && !facebookPresence.equals(FacebookPresence.OFFLINE)){
+				deliverPresenceToClient(rosterElement.getId(), facebookPresence);
+			}
+		}
 	}
 
 	public void stopSession() {
@@ -130,7 +137,8 @@ public class SessionHandlerImpl implements SessionHandler {
 		}
 
 		if (chatManager != null) {
-			chatManager.getChatManager().removeChatListener(chatManagerListener);
+			chatManager.getChatManager()
+					.removeChatListener(chatManagerListener);
 			chatManager = null;
 		}
 
@@ -151,7 +159,22 @@ public class SessionHandlerImpl implements SessionHandler {
 		try {
 			handler.processOutgoing(sessionIdentifier, data);
 		} catch (Exception e) {
-			logger.error("Exception processing message", e);
+			logger.error("Exception delivering message", e);
+		}
+
+	}
+	
+	public void deliverPresenceToClient(String id, FacebookPresence presence) {
+		Map<String, Object> data = new HashMap<String, Object>();
+		data.put("action", "presence");
+		data.put("id", id);
+		data.put("presence", PresenceUtil
+				.getPresenceStringFromFacebookPresence(presence));
+
+		try {
+			handler.processOutgoing(sessionIdentifier, data);
+		} catch (Exception e) {
+			logger.error("Exception delivering presence", e);
 		}
 
 	}
@@ -159,23 +182,23 @@ public class SessionHandlerImpl implements SessionHandler {
 	public void sendMessage(String messageContent) {
 		sendMessage("Bot", messageContent);
 	}
-	
+
 	public void sendMessage(String id, String messageContent) {
 		RosterElement sender = rosterManager.getElement(id);
 		String senderName = id;
-		
-		if(sender!=null)
+
+		if (sender != null)
 			senderName = sender.getDisplayName();
-		
+
 		for (RosterElement rosterElement : rosterManager.getRosterElements()) {
 			try {
-				sendMessageToXmpp(senderName + " says " + messageContent, rosterElement
-						.getId());
+				sendMessageToXmpp(senderName + " says " + messageContent,
+						rosterElement.getId());
 			} catch (XMPPException e) {
 				logger.error("Exception when sending message", e);
 			}
 		}
-		
+
 		deliverMessageToClient(senderName, messageContent);
 	}
 
@@ -189,11 +212,10 @@ public class SessionHandlerImpl implements SessionHandler {
 
 	protected void goOnline() {
 		Presence packet = new Presence(Type.available);
-		
-		xmppConnection.sendPacket(packet);		
+
+		xmppConnection.sendPacket(packet);
 	}
 
-	
 	public String getSessionIdentifier() {
 		return sessionIdentifier;
 	}
@@ -211,7 +233,7 @@ public class SessionHandlerImpl implements SessionHandler {
 			return accept;
 		}
 	}
-	
+
 	public ChatManagerImpl getChatManager() {
 		return chatManager;
 	}
