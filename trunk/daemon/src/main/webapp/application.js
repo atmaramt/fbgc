@@ -21,6 +21,9 @@ dojo.addOnLoad(function()
             {
             	if(message.data.action == 'received')
             		dojo.byId('messages').innerHTML += '<div><b>' + message.data.id + ': </b>' + message.data.message + '</div>';
+            	
+            	if(message.data.action == 'presence')
+            		dojo.byId('friends').innerHTML += '<div><b>' + message.data.id + '</b> is ' + message.data.presence + '</div>';
             });
             
             // Publish on a service channel since the message is for the server only
