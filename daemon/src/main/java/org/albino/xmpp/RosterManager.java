@@ -5,17 +5,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.packet.Presence;
 
 public class RosterManager {
+	Logger logger = Logger.getLogger(RosterManager.class);
+
 	private Map<String, RosterElement> knownEntries = new HashMap<String, RosterElement>();
 	private Roster roster;
 
 	public void setRoster(Roster roster) {
 		this.roster = roster;
 		for (RosterEntry rosterEntry : roster.getEntries()) {
-			System.out.println("Added element: " + rosterEntry.getUser() + ", "
+			logger.debug("Added element: " + rosterEntry.getUser() + ", "
 					+ rosterEntry.getName() + ", " + rosterEntry.getStatus());
 			addElement(rosterEntry.getUser(), rosterEntry.getName());
 		}
@@ -36,6 +40,10 @@ public class RosterManager {
 			rosterElement.setDisplayName(displayName);
 			knownEntries.put(id, rosterElement);
 		}
+	}
+	
+	public Presence getPresence(String id){
+		return roster.getPresence(id);
 	}
 
 	public RosterElement getElement(String id) {
