@@ -6,9 +6,7 @@
 	    <script type="text/javascript" src="connect.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/dojo/dojo.js.uncompressed.js"></script>
 	    <script type="text/javascript">
-	    	dojo.require("dojox.cometd");
-	    
-	        var config = {
+	    	var config = {
 	            contextPath: '${pageContext.request.contextPath}'
 	        };
 	    </script>
