@@ -24,10 +24,11 @@ public class PresenceUtil {
 		logger.debug("getFacebookPresenceFromSmackPresence: Presence mode: "
 				+ presence.getMode() + ", type: " + presence.getType());
 
-		if (Presence.Mode.available.equals(presence.getMode()))
+		if (Presence.Type.available.equals(presence.getType())){
+			if (Presence.Mode.away.equals(presence.getMode()))
+				return FacebookPresence.AWAY;
 			return FacebookPresence.ONLINE;
-		if (Presence.Mode.away.equals(presence.getMode()))
-			return FacebookPresence.AWAY;
+		}
 		if (Presence.Type.unavailable.equals(presence.getType()))
 			return FacebookPresence.OFFLINE;
 		return null;
