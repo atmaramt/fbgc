@@ -25,7 +25,7 @@ dojo.addOnLoad(function()
             		dojo.byId('messages').innerHTML += '<div><b>' + message.data.id + ': </b>' + message.data.message + '</div>';
             	
             	if(message.data.action == 'presence'){
-            		dojo.byId('friends').innerHTML += '<div><b>' + message.data.id + '</b> is ' + message.data.presence + '</div>';
+            		dojo.byId('messages').innerHTML += '<div><b>' + message.data.id + '</b> is ' + message.data.presence + '</div>';
             		
             		if(message.data.presence == 'online' || message.data.presence == 'away'){
             			onlineUsers[message.data.id] = true;
