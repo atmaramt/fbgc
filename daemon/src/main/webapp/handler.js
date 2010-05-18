@@ -27,11 +27,12 @@ dojo.addOnLoad(function()
             	if(message.data.action == 'presence'){
             		dojo.byId('friends').innerHTML += '<div><b>' + message.data.id + '</b> is ' + message.data.presence + '</div>';
             		
-            		if(message.data.presence == 'online' || message.data.presence == 'away')
-            			onlineUsers[message.data.id] = true;
-            		else
-            			onlineUsers[message.data.id] = false;
-            		
+            		if(message.data.presence == 'online' || message.data.presence == 'away'){
+            			alert("trueee");
+            			onlineUsers[message.data.id] = "true";
+            		}else{
+            			onlineUsers[message.data.id] = "false";
+            		}
             		_refreshUsersBox();
             	}
             });
@@ -111,11 +112,9 @@ function _refreshUsersBox(){
 	
 	dojo.byId('users').innerHTML = '';
 	
-	for(var i=0; i<len; i++) {
-		var value = onlineUsers[i];
+	for(var key in onlineUsers) {
+		var value = arr[key];
 		
-		alert('val is' + val);
-		
-		dojo.byId('users').innerHTML += value + ' ';
+		dojo.byId('users').innerHTML += key + ' ';
 	}
 }
