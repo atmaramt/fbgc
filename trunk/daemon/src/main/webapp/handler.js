@@ -1,5 +1,7 @@
 dojo.require("dojox.cometd");
 
+var onlineUsers = [];
+
 dojo.addOnLoad(function()
 {
     var cometd = dojox.cometd;
@@ -103,9 +105,9 @@ function _logout()
 }
 
 function _refreshUsersBox(){
-	var len=onlineUsers.length;
-	
 	alert('length is' + onlineUsers.length);
+	
+	alert('array is' + onlineUsers);
 	
 	dojo.byId('users').innerHTML = '';
 	
