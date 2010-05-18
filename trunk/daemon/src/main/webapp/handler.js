@@ -105,11 +105,11 @@ function _logout()
 }
 
 function _refreshUsersBox(){
-	var len=arr.length;
+	var len=onlineUsers.length;
 	dojo.byId('users').innerHTML = '';
 	
 	for(var i=0; i<len; i++) {
-		var value = arr[i];
+		var value = onlineUsers[i];
 		
 		dojo.byId('users').innerHTML += value + ' ';
 	}
