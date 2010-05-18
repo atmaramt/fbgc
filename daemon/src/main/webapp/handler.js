@@ -28,9 +28,9 @@ dojo.addOnLoad(function()
             		dojo.byId('friends').innerHTML += '<div><b>' + message.data.id + '</b> is ' + message.data.presence + '</div>';
             		
             		if(message.data.presence == 'online' || message.data.presence == 'away'){
-            			onlineUsers[message.data.id] = "true";
+            			onlineUsers[message.data.id] = true;
             		}else{
-            			onlineUsers[message.data.id] = "false";
+            			onlineUsers[message.data.id] = false;
             		}
             		_refreshUsersBox();
             	}
@@ -105,11 +105,14 @@ function _logout()
 }
 
 function _refreshUsersBox(){
-	dojo.byId('users').innerHTML = '';
+	dojo.byId('users').innerHTML = '<ul>';
 	
 	for(var key in onlineUsers) {
 		var value = onlineUsers[key];
 		
-		dojo.byId('users').innerHTML += key + ' ';
+		if(value == true)
+			dojo.byId('users').innerHTML += '<li>' + key + '</li>';
 	}
+	
+	dojo.byId('users').innerHTML += '</ul>';
 }
