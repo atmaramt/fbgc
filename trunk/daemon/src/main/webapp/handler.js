@@ -106,10 +106,15 @@ function _logout()
 
 function _refreshUsersBox(){
 	var len=onlineUsers.length;
+	
+	alert('length is' + onlineUsers.length);
+	
 	dojo.byId('users').innerHTML = '';
 	
 	for(var i=0; i<len; i++) {
 		var value = onlineUsers[i];
+		
+		alert('val is' + val);
 		
 		dojo.byId('users').innerHTML += value + ' ';
 	}
