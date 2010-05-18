@@ -1,8 +1,6 @@
 dojo.require("dojox.cometd");
 
 var onlineUsers = [];
-onlineUsers["uxx"] = "true";
-
 
 dojo.addOnLoad(function()
 {
@@ -107,10 +105,6 @@ function _logout()
 }
 
 function _refreshUsersBox(){
-	alert('length is' + onlineUsers.length);
-	
-	alert('array is' + onlineUsers);
-	
 	dojo.byId('users').innerHTML = '';
 	
 	for(var key in onlineUsers) {
