@@ -1,7 +1,5 @@
 dojo.require("dojox.cometd");
 
-var onlineUsers = [];
-
 dojo.addOnLoad(function()
 {
     var cometd = dojox.cometd;
@@ -28,7 +26,6 @@ dojo.addOnLoad(function()
             		dojo.byId('friends').innerHTML += '<div><b>' + message.data.id + '</b> is ' + message.data.presence + '</div>';
             		
             		if(message.data.presence == 'online' || message.data.presence == 'away'){
-            			alert("trueee");
             			onlineUsers[message.data.id] = "true";
             		}else{
             			onlineUsers[message.data.id] = "false";
