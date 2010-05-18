@@ -27,10 +27,10 @@ dojo.addOnLoad(function()
             	if(message.data.action == 'presence'){
             		dojo.byId('friends').innerHTML += '<div><b>' + message.data.id + '</b> is ' + message.data.presence + '</div>';
             		
-            		if(presence == 'online' || presence == 'away')
-            			onlineUsers['message.data.id'] = true;
+            		if(message.data.presence == 'online' || message.data.presence == 'away')
+            			onlineUsers[message.data.id] = true;
             		else
-            			onlineUsers['message.data.id'] = false;
+            			onlineUsers[message.data.id] = false;
             		
             		_refreshUsersBox();
             	}
