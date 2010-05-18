@@ -1,5 +1,7 @@
 dojo.require("dojox.cometd");
 
+var onlineUsers = [];
+
 dojo.addOnLoad(function()
 {
     var cometd = dojox.cometd;
@@ -22,8 +24,16 @@ dojo.addOnLoad(function()
             	if(message.data.action == 'received')
             		dojo.byId('messages').innerHTML += '<div><b>' + message.data.id + ': </b>' + message.data.message + '</div>';
             	
-            	if(message.data.action == 'presence')
+            	if(message.data.action == 'presence'){
             		dojo.byId('friends').innerHTML += '<div><b>' + message.data.id + '</b> is ' + message.data.presence + '</div>';
+            		
+            		if(presence == 'online' || presence == 'away')
+            			onlineUsers['message.data.id'] = true;
+            		else
+            			onlineUsers['message.data.id'] = false;
+            		
+            		_refreshUsersBox();
+            	}
             });
             
             // Publish on a service channel since the message is for the server only
@@ -92,4 +102,15 @@ function _logout()
         {
             cometd.publish('/service/incoming', { action: 'logout'});
         });
+}
+
+function _refreshUsersBox(){
+	var len=arr.length;
+	dojo.byId('users').innerHTML = '';
+	
+	for(var i=0; i<len; i++) {
+		var value = arr[i];
+		
+		dojo.byId('users').innerHTML += value + ' ';
+	}
 }

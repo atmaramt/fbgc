@@ -32,6 +32,8 @@
 	        <a href="#" onClick="_sendMessage();return true">Send!</a>
 	    </div>
 
+		<div id="users"></div>
+
 		<script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"></script> 
 		<script type="text/javascript"> FB.init("11b0bfb6cbf4a5dfe69227d7b2972f2a","xd_receiver.htm", {"ifUserConnected" : update_user_box}); </script> 
 	</body> 
