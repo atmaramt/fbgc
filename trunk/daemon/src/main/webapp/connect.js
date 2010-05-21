@@ -15,7 +15,9 @@ function update_user_box() {
 			+ "<h2>Your bot is</h2>"
 			+ "<fb:profile-pic uid=loggedinuser facebook-logo=true></fb:profile-pic>"
 			+ "<fb:name uid=loggedinuser useyou=false></fb:name>"
-			+ "<a href='#' onclick='_loginEx();'>Login</a>" + "</span>";
+			+ "<a href='#' onclick='_loginEx();'>Login</a>"
+			+ "<a href='#' onclick='FB.Connect.logoutAndRedirect('bot.jsp')'>Not you?</a>"
+			+ "</span>";
 
 	var userid_box = document.getElementById("userid");
 	var api = FB.Facebook.apiClient;
