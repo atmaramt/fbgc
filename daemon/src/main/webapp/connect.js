@@ -1,3 +1,11 @@
+function _onConnected(){
+	update_user_box();
+}
+
+function _onNotConnected(){
+	alert('not connected');
+}
+ 
 function update_user_box() {
 	var user_box = document.getElementById("user");
 

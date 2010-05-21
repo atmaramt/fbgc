@@ -12,7 +12,6 @@
 	    </script>
 	</head>
 	<body>
-		<h1>Activate bot:</h1>
 		<div id="user">
 			<fb:login-button onlogin="update_user_box();"></fb:login-button> 
 		</div> 
@@ -21,7 +20,7 @@
 		
 		<div id="body"></div>
 		
-		<h2>Console</h2>
+		<h3>Console</h3>
 		
 		<div id="messages"></div>
 	
@@ -33,6 +32,8 @@
 	    </div>
 
 		<script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"></script> 
-		<script type="text/javascript"> FB.init("11b0bfb6cbf4a5dfe69227d7b2972f2a","xd_receiver.htm", {"ifUserConnected" : update_user_box}); </script> 
+		<script type="text/javascript"> 
+			FB.init("11b0bfb6cbf4a5dfe69227d7b2972f2a","xd_receiver.htm", {"ifUserConnected":_onConnected, "ifUserNotConnected":_onNotConnected}); 
+		</script> 
 	</body> 
 </html>
