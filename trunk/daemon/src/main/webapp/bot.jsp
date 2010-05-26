@@ -14,9 +14,6 @@
 	<body>
 		<div id="user">
 			<fb:login-button onlogin="update_user_box();"></fb:login-button> 
-		</div> 
-		<div>
-			<a href='#' onclick='FB.Connect.logoutAndRedirect("bot.jsp")'>Not you?</a>
 		</div>
 		<div id="userid"></div>
 		
