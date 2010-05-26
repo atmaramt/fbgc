@@ -8,6 +8,7 @@ import java.util.Set;
 import org.albino.xmpp.SessionHandler;
 import org.albino.xmpp.SessionHandlerImpl;
 import org.apache.log4j.Logger;
+import org.apache.log4j.NDC;
 import org.cometd.Bayeux;
 import org.cometd.Client;
 import org.cometd.Message;
@@ -33,6 +34,8 @@ public class DojoCommunicationHandler extends BayeuxService {
 
 	@SuppressWarnings("unchecked")
 	public void processIncoming(Client remote, Message message) {
+		NDC.push(remote.getId());
+		
 		String id = remote.getId();
 		Action action = getAction(message);
 
@@ -63,6 +66,9 @@ public class DojoCommunicationHandler extends BayeuxService {
 			if (sessions.containsKey(id))
 				sessions.remove(id);
 		}
+		
+		NDC.pop();
+		NDC.remove();
 	}
 
 	public void processOutgoing(String id, Map<String, Object> data) {

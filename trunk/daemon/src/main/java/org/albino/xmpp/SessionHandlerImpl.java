@@ -126,6 +126,7 @@ public class SessionHandlerImpl implements SessionHandler {
 	}
 
 	public void stopSession() {
+		logger.debug("Stopping session...");
 		if (xmppConnection == null)
 			return;
 
