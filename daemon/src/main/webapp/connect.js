@@ -11,13 +11,20 @@ function _updateUserBox() {
 
 	// add in some XFBML. note that we set useyou=false so it doesn't display
 	// "you"
-	user_box.innerHTML = "<span>"
-			+ "<h2>Your bot is</h2>"
-			+ "<fb:profile-pic uid=loggedinuser facebook-logo=true size='normal'></fb:profile-pic>"
-			+ "<fb:name uid=loggedinuser useyou=false></fb:name>"
-			+ "<a href='#' onclick='_loginEx();'>Login</a>"
-			+ "<a href='#' onclick='FB.Connect.logoutAndRedirect(\"bot.jsp\")'>Not you?</a>"
-			+ "</span>";
+	user_box.innerHTML = 
+			"<span>" + 
+				"<fb:profile-pic uid=loggedinuser facebook-logo=true size='normal'></fb:profile-pic>" +
+				"<h3>" +
+					"<fb:name uid=loggedinuser useyou=false></fb:name>" +
+				"</h3>" +
+			
+				"<ul>" +
+					"<li><a href='#' onclick='_checkForPermissions();'>Login</a></li>" +
+					"<li><a href='#' onclick='_disconnectFromFacebook();'>Disconnect from facebook</a></li>" +
+				"</ul>" +
+			
+				"<div id='alert'></div>" +
+			"</span>";
 
 	var userid_box = document.getElementById("userid");
 	var api = FB.Facebook.apiClient;
@@ -27,10 +34,18 @@ function _updateUserBox() {
 	FB.XFBML.Host.parseDomTree();
 }
 
-function _loginEx() {
+function _disconnectFromFacebook(){
+	FB.Connect.logoutAndRedirect("bot.jsp");
+}
+
+function _checkForPermissions() {
+	_checkForOfflineAccessPermission();
+}
+
+function _checkForOfflineAccessPermission() {
 	facebookPromptPermissionAndReturnResult('offline_access', function(accepted) {
 		if (accepted) {
-			_loginExP();
+			_checkForXmppLoginPermission();
 		} else {
 			// User does not have permission
 			alert(' not granted');
@@ -39,7 +54,7 @@ function _loginEx() {
 
 }
 
-function _loginExP() {
+function _checkForXmppLoginPermission() {
 	facebookPromptPermissionAndReturnResult('xmpp_login', function(accepted) {
 		if (accepted) {
 			// User (already) has permission
