@@ -13,7 +13,7 @@
 	</head>
 	<body>
 		<div id="user">
-			<fb:login-button onlogin="update_user_box();"></fb:login-button> 
+			<fb:login-button onlogin="_updateUserBox();"></fb:login-button> 
 		</div>
 		<div id="userid"></div>
 		
