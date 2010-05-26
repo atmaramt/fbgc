@@ -28,7 +28,7 @@ function _updateUserBox() {
 }
 
 function _loginEx() {
-	facebook_prompt_permission('offline_access', function(accepted) {
+	facebookPromptPermissionAndReturnResult('offline_access', function(accepted) {
 		if (accepted) {
 			_loginExP();
 		} else {
@@ -40,7 +40,7 @@ function _loginEx() {
 }
 
 function _loginExP() {
-	facebook_prompt_permission('xmpp_login', function(accepted) {
+	facebookPromptPermissionAndReturnResult('xmpp_login', function(accepted) {
 		if (accepted) {
 			// User (already) has permission
 			var api = FB.Facebook.apiClient;
@@ -52,7 +52,21 @@ function _loginExP() {
 	});
 }
 
-function facebook_prompt_permission(permission, callbackFunc) {
+function facebookPromptPermissionAndReturnResult(permission, callbackFunc) {
+	facebookPromptPermission(permission, function(accepted) {
+		FB.Facebook.apiClient.users_hasAppPermission(permission,
+				function(result) {
+					if (result != 0) {
+						// permission granted.
+						callbackFunc(true);
+					}else{
+						alert('aq not granted');
+					}
+			});
+	});
+}
+
+function facebookPromptPermission(permission, callbackFunc) {
 	// Check if user has permission, if not invoke dialog.
 	FB.ensureInit(function() {
 		FB.Connect.requireSession(function() {
