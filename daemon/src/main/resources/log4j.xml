@@ -18,7 +18,6 @@
 
 	<category name="org.albino">
 		<priority value="DEBUG" />
-		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="FILE" />
 	</category>
 
@@ -31,6 +30,5 @@
 		-->
 		<priority value="INFO" />
 		<appender-ref ref="CONSOLE" />
-		<appender-ref ref="FILE" />
 	</root>
 </log4j:configuration>
