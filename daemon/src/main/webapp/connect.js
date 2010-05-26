@@ -20,6 +20,7 @@ function _updateUserBox() {
 			
 				"<ul>" +
 					"<li><a href='#' onclick='_checkForPermissions();'>Login</a></li>" +
+					"<li><a href='#' onclick='_logout();'>Logout</a></li>" +
 					"<li><a href='#' onclick='_disconnectFromFacebook();'>Disconnect from facebook</a></li>" +
 				"</ul>" +
 			
