@@ -1,19 +1,19 @@
 function _onConnected(){
-	update_user_box();
+	_updateUserBox();
 }
 
 function _onNotConnected(){
 	alert('not connected');
 }
  
-function update_user_box() {
+function _updateUserBox() {
 	var user_box = document.getElementById("user");
 
 	// add in some XFBML. note that we set useyou=false so it doesn't display
 	// "you"
 	user_box.innerHTML = "<span>"
 			+ "<h2>Your bot is</h2>"
-			+ "<fb:profile-pic uid=loggedinuser facebook-logo=true></fb:profile-pic>"
+			+ "<fb:profile-pic uid=loggedinuser facebook-logo=true size='normal'></fb:profile-pic>"
 			+ "<fb:name uid=loggedinuser useyou=false></fb:name>"
 			+ "<a href='#' onclick='_loginEx();'>Login</a>"
 			+ "<a href='#' onclick='FB.Connect.logoutAndRedirect(\"bot.jsp\")'>Not you?</a>"
@@ -21,7 +21,6 @@ function update_user_box() {
 
 	var userid_box = document.getElementById("userid");
 	var api = FB.Facebook.apiClient;
-	userid_box.innerHTML = "" + api.get_session().uid;
 
 	// because this is XFBML, we need to tell Facebook to re-process the
 	// document
