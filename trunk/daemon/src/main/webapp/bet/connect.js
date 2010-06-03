@@ -3,6 +3,8 @@ function _onConnected(){
 }
 
 function _onNotConnected(){
+	alert("asdasdasd");
+	
 	FB.login(function(response) {
 		  if (response.session) {
 		    if (response.perms) {
