@@ -18,7 +18,6 @@
 				</h3>
 			</span>
 		</div>
-		<div id="userid"></div>
 
 		<script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"></script> 
 		<script type="text/javascript"> 
