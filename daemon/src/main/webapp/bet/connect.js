@@ -3,7 +3,7 @@ function _onConnected(){
 }
 
 function _onNotConnected(){
-	alert('not connected');
+	
 }
  
 function _updateUserBox() {
