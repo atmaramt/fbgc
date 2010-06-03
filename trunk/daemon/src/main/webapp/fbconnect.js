@@ -1,20 +1,10 @@
 function _onConnected(){
+	alert('not connected');
 	_updateUserBox();
 }
 
 function _onNotConnected(){
-	FB.login(function(response) {
-		  if (response.session) {
-		    if (response.perms) {
-		      // user is logged in and granted some permissions.
-		      // perms is a comma separated list of granted permissions
-		    } else {
-		      // user is logged in, but did not grant any permissions
-		    }
-		  } else {
-		    // user is not logged in
-		  }
-		}, {perms:'read_stream,publish_stream'});
+	alert('not connected');
 }
  
 function _updateUserBox() {
@@ -30,10 +20,15 @@ function _updateUserBox() {
 				"</h3>" +
 			
 				"<ul>" +
-					"<li><a href='#' onclick='alert(\"Not yet!\");'>Bet with cagri</a></li>" +
+					"<li><a href='#' onclick='_checkForPermissions();'>Login</a></li>" +
+					"<li><a href='#' onclick='_logout();'>Logout</a></li>" +
+					"<li><a href='#' onclick='_disconnectFromFacebook();'>Disconnect from facebook</a></li>" +
 				"</ul>" +
+			
+				"<div id='alert'></div>" +
 			"</span>";
 
+	var userid_box = document.getElementById("userid");
 	var api = FB.Facebook.apiClient;
 
 	// because this is XFBML, we need to tell Facebook to re-process the
@@ -42,7 +37,7 @@ function _updateUserBox() {
 }
 
 function _disconnectFromFacebook(){
-	FB.Connect.logoutAndRedirect("bet.jsp");
+	FB.Connect.logoutAndRedirect("bot.jsp");
 }
 
 function _checkForPermissions() {
