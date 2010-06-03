@@ -12,23 +12,10 @@
 	    </script>
 	</head>
 	<body>
+		<h1>Do you wanna bet you fucker? :)</h1>
 		<div id="user">
 			<fb:login-button onlogin="_updateUserBox();"></fb:login-button> 
 		</div>
-		<div id="userid"></div>
-		
-		<div id="body"></div>
-		
-		<h3>Console</h3>
-		
-		<div id="messages"></div>
-	
-		<div id="users"></div>
-	
-		<div>
-			<input id="phrase" type="text"></input>
-	        <a href="#" onClick="_sendMessage();return true">Send!</a>
-	    </div>
 
 		<script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"></script> 
 		<script type="text/javascript"> 
