@@ -14,12 +14,12 @@
 	<body>
 		<h1>Do you wanna bet you fucker? :)</h1>
 		<div id="user">
-			<fb:login-button onlogin="_updateUserBox();"></fb:login-button> 
+			 
 		</div>
 
 		<script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"></script> 
 		<script type="text/javascript"> 
-			FB.init("73ad346a92f9560feec31a72ef7fcd98","xd_receiver.htm", {"ifUserConnected":_onConnected, "ifUserNotConnected":_onNotConnected}); 
+			FB.init("73ad346a92f9560feec31a72ef7fcd98","xd_receiver.htm", {"ifUserConnected":_onConnected, "ifUserNotConnected":_onNotConnected, "forceBrowserPopupForLogin":true}); 
 		</script> 
 	</body> 
 </html>
