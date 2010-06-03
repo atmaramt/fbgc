@@ -1,5 +1,5 @@
 function _onConnected(){
-	_updateUserBox();
+	alert('not connected');
 }
 
 function _onNotConnected(){
