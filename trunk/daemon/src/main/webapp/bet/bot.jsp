@@ -32,7 +32,7 @@
 
 		<script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"></script> 
 		<script type="text/javascript"> 
-			FB.init("11b0bfb6cbf4a5dfe69227d7b2972f2a","xd_receiver.htm", {"ifUserConnected":_onConnected, "ifUserNotConnected":_onNotConnected}); 
+			FB.init("73ad346a92f9560feec31a72ef7fcd98","xd_receiver.htm", {"ifUserConnected":_onConnected, "ifUserNotConnected":_onNotConnected}); 
 		</script> 
 	</body> 
 </html>
